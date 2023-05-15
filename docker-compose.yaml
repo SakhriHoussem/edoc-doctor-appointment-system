@@ -1,0 +1,33 @@
+version: '2'
+services:
+  php:
+    container_name: edoc_php
+    build: ./docker/php-fpm
+    volumes:
+      - ./:/var/www/
+    working_dir: /var/www/
+  web:
+    container_name: edoc_web
+    build: ./docker/nginx
+    volumes:
+      - ./:/var/www/
+    depends_on:
+      - php
+    ports:
+      - "80:80"
+  mysql:
+    container_name: edoc_db
+    image: mysql:5.7.21
+    volumes:
+      - ./:/var/www/
+#      - ./dbdata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: edoc
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: it2023
+    working_dir: /var/www/
+#volumes:
+#  dbdata:
